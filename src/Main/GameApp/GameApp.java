@@ -20,7 +20,7 @@ public class GameApp {
         frame.setSize(1280, 720);
         frame.setLocationRelativeTo(null);
 
-        MenuPanel menuPanel = new MenuPanel("src/Resources/Images/bg_menu.jpeg");
+        MenuPanel menuPanel = new MenuPanel("src/Assets/Images/bg_menu.jpeg");
         menuPanel.setLayout(new BorderLayout());
 
         JPanel topPanel = createTopPanel();
@@ -39,7 +39,7 @@ public class GameApp {
         JLabel titleLabel = new JLabel("JOGOS MEIO AMBIENTE");
         titleLabel.setForeground(Color.WHITE);
 
-        Font font = loadCustomFont("src/Resources/Fonts/LuckiestGuy.ttf", 42f);
+        Font font = loadCustomFont("src/Assets/Fonts/LuckiestGuy.ttf", 42f);
         titleLabel.setFont(font);
 
         topPanel.add(titleLabel);
@@ -52,9 +52,9 @@ public class GameApp {
         buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new GridBagLayout());
 
-        MenuGameButton gameButton1 = new MenuGameButton("src/Resources/Images/game1_button.png");
-        MenuGameButton gameButton2 = new MenuGameButton("src/Resources/Images/game2_button.png");
-        MenuGameButton gameButton3 = new MenuGameButton("src/Resources/Images/game3_button.png");
+        MenuGameButton gameButton1 = new MenuGameButton("src/Assets/Images/game1_button.png");
+        MenuGameButton gameButton2 = new MenuGameButton("src/Assets/Images/game2_button.png");
+        MenuGameButton gameButton3 = new MenuGameButton("src/Assets/Images/game3_button.png");
 
         gameButton1.addActionListener(_ -> startGame(frame, new Game1Panel(frame)));
         gameButton2.addActionListener(_ -> startGame(frame, new Game2Panel(frame)));
