@@ -72,6 +72,7 @@ public class GameApp {
         frame.add(gamePanel);
         frame.revalidate();
         frame.repaint();
+        gamePanel.requestFocusInWindow();
     }
 
     /// Load custom font or fallback to Arial Bold
