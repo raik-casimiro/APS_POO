@@ -86,6 +86,11 @@ public class Game3Panel extends GamePanel {
     }
 
     private void updateGame() {
+
+        if(this.isPaused) return;
+
+        requestFocusInWindow();
+
         if (laserAtivo) {
             laser.mover();
             if (laser.getY() < 150) {

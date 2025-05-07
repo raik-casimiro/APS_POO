@@ -71,7 +71,6 @@ public class Game2Panel extends GamePanel implements ActionListener, KeyListener
         this.frame = frame;
         setLayout(null);
         setFocusable(true);
-        requestFocusInWindow();
         addKeyListener(this);
 
         loadImages();
@@ -79,6 +78,10 @@ public class Game2Panel extends GamePanel implements ActionListener, KeyListener
         binX = 0;
         trashList = new ArrayList<>();
         gameTimer = new Timer(GAME_SPEED, e -> {
+            if(this.isPaused) return;
+
+            requestFocusInWindow();
+            
             if (!isGameOver && selectedBin != -1) {
                 updateGame();
                 repaint();
