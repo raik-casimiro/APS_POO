@@ -64,8 +64,8 @@ public class GameApp {
         MenuGameButton gameButton2 = new MenuGameButton("src/Assets/Images/game2_button.png");
         MenuGameButton gameButton3 = new MenuGameButton("src/Assets/Images/game3_button.png");
 
-        gameButton1.addActionListener(e -> startGame(frame, new Game1Panel(frame)));
-        gameButton2.addActionListener(e -> startGame(frame, new Game2Panel(frame)));
+        gameButton1.addActionListener(e -> startGame(frame, new Game2Panel(frame)));
+        gameButton2.addActionListener(e -> startGame(frame, new Game1Panel(frame)));
         gameButton3.addActionListener(e -> startGame(frame, new Game3Panel(frame)));
 
         buttonPanel.add(gameButton1);
