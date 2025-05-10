@@ -17,8 +17,10 @@ public class GameApp {
     public static void createAndShowGUI() {
         JFrame frame = new JFrame("APS - Jogo Meio Ambiente");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1280, 720);
-        frame.setLocationRelativeTo(null);
+
+        // Tela cheia sem barra de título
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setUndecorated(true);
 
         MenuPanel menuPanel = new MenuPanel("src/Assets/Images/bg_menu.jpeg");
         menuPanel.setLayout(new BorderLayout());
@@ -30,6 +32,13 @@ public class GameApp {
         menuPanel.add(buttonPanel);
         frame.add(menuPanel);
         frame.setVisible(true);
+
+        // Tecla ESC para sair do jogo
+        frame.getRootPane().registerKeyboardAction(
+            e -> System.exit(0),
+            KeyStroke.getKeyStroke("ESCAPE"),
+            JComponent.WHEN_IN_FOCUSED_WINDOW
+        );
     }
 
     private static JPanel createTopPanel() {
@@ -43,7 +52,6 @@ public class GameApp {
         titleLabel.setFont(font);
 
         topPanel.add(titleLabel);
-
         return topPanel;
     }
 
@@ -56,9 +64,9 @@ public class GameApp {
         MenuGameButton gameButton2 = new MenuGameButton("src/Assets/Images/game2_button.png");
         MenuGameButton gameButton3 = new MenuGameButton("src/Assets/Images/game3_button.png");
 
-        gameButton1.addActionListener(_ -> startGame(frame, new Game1Panel(frame)));
-        gameButton2.addActionListener(_ -> startGame(frame, new Game2Panel(frame)));
-        gameButton3.addActionListener(_ -> startGame(frame, new Game3Panel(frame)));
+        gameButton1.addActionListener(e -> startGame(frame, new Game1Panel(frame)));
+        gameButton2.addActionListener(e -> startGame(frame, new Game2Panel(frame)));
+        gameButton3.addActionListener(e -> startGame(frame, new Game3Panel(frame)));
 
         buttonPanel.add(gameButton1);
         buttonPanel.add(gameButton2);
@@ -75,15 +83,11 @@ public class GameApp {
         gamePanel.requestFocusInWindow();
     }
 
-    /// Load custom font or fallback to Arial Bold
     private static Font loadCustomFont(String fontPath, float size) {
         try {
-
             File fontFile = new File(fontPath);
             Font font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-
             return font.deriveFont(size);
-
         } catch (FontFormatException | IOException e) {
             System.out.println("Couldn't load font: " + e.getMessage());
             return new Font("Arial", Font.BOLD, (int) size);

@@ -2,6 +2,7 @@ package Main.Games.Game3;
 
 import Main.GameApp.GameApp;
 import Main.Games.GamePanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -14,7 +15,6 @@ import java.util.Random;
 public class Game3Panel extends GamePanel {
     private Nave nave;
     private ArrayList<Lixo> lixos = new ArrayList<>();
-    private ArrayList<Image> coracoes = new ArrayList<>();
     private Laser laser;
     private Image fundo;
     private Image coracaoImg;
@@ -27,13 +27,13 @@ public class Game3Panel extends GamePanel {
     private boolean esquerdaPressionada = false;
     private boolean direitaPressionada = false;
     private boolean espacoPressionado = false;
+    private boolean fimDeJogo = false;
+    private JButton botaoJogarNovamente;
 
     public Game3Panel(JFrame frame) {
         super(frame);
         fundo = new ImageIcon("src/Main/Games/Game3/Assets/Fundo.jpeg").getImage();
         coracaoImg = new ImageIcon("src/Main/Games/Game3/Assets/Coracao.png").getImage();
-        vidas = MAX_VIDAS;
-        pontos = 0;
 
         try {
             AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("src/Main/Games/Game3/Assets/explosao.wav"));
@@ -43,15 +43,16 @@ public class Game3Panel extends GamePanel {
             e.printStackTrace();
         }
 
-        nave = new Nave(375, 500, 50, 50);
-        laser = new Laser(0, 0, 5, 10, 5);
+        nave = new Nave(375, 700, 50, 50);
+        laser = new Laser(0, 70, 5, 10, 20);
 
-        // Inicializar lixos
         for (int i = 0; i < 3; i++) {
             lixos.add(new Lixo(random.nextInt(750), random.nextInt(300) - 600, 40, 40));
         }
 
+        setLayout(null);
         setFocusable(true);
+
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -72,22 +73,26 @@ public class Game3Panel extends GamePanel {
             }
         });
 
-        Timer timer = new Timer(16, new ActionListener() { // 60 FPS
-            public void actionPerformed(ActionEvent e) {
-                if (esquerdaPressionada) nave.moverEsquerda();
-                if (direitaPressionada) nave.moverDireita();
-                if (espacoPressionado) dispararLaser();
+        botaoJogarNovamente = new JButton("JOGAR NOVAMENTE");
+        botaoJogarNovamente.setFont(new Font("Arial", Font.BOLD, 16));
+        botaoJogarNovamente.setSize(220, 50);
+        botaoJogarNovamente.setVisible(false);
+        botaoJogarNovamente.addActionListener(e -> reiniciarJogo());
+        add(botaoJogarNovamente);
 
-                updateGame();
-                repaint();
-            }
+        Timer timer = new Timer(16, e -> {
+            if (esquerdaPressionada) nave.moverEsquerda();
+            if (direitaPressionada) nave.moverDireita();
+            if (espacoPressionado) dispararLaser();
+
+            updateGame();
+            repaint();
         });
         timer.start();
     }
 
     private void updateGame() {
-
-        if(this.isPaused) return;
+        if (this.isPaused || fimDeJogo) return;
 
         requestFocusInWindow();
 
@@ -131,13 +136,24 @@ public class Game3Panel extends GamePanel {
 
     private void perderVida() {
         if (vidas > 0) vidas--;
-        if (vidas == 0) {
-            JOptionPane.showMessageDialog(this, "Game Over! Pontuação: " + pontos);
-
-            frame.getContentPane().removeAll();
-            GameApp.createAndShowGUI();
-            frame.dispose();
+        if (vidas == 0 && !fimDeJogo) {
+            fimDeJogo = true;
+            centralizarBotao();
+            botaoJogarNovamente.setVisible(true);
         }
+    }
+
+    private void centralizarBotao() {
+        int centerX = getWidth() / 2 - botaoJogarNovamente.getWidth() / 2;
+        int centerY = getHeight() / 2 + 30;
+        botaoJogarNovamente.setLocation(centerX, centerY);
+    }
+
+    private void reiniciarJogo() {
+        frame.getContentPane().removeAll();
+        frame.setContentPane(new Game3Panel(frame));
+        frame.revalidate();
+        frame.repaint();
     }
 
     private void dispararLaser() {
@@ -161,7 +177,17 @@ public class Game3Panel extends GamePanel {
 
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 18));
-        g.drawString("Pontos: " + pontos, 650, 30);
+        g.drawString("Pontos: " + pontos, getWidth() - 150, 30);
+
+        if (fimDeJogo) {
+            g.setFont(new Font("Arial", Font.BOLD, 48));
+            FontMetrics fm = g.getFontMetrics();
+            String msg = "FIM DE JOGO";
+            int msgWidth = fm.stringWidth(msg);
+            int x = (getWidth() - msgWidth) / 2;
+            int y = getHeight() / 2 - 30;
+            g.setColor(Color.RED);
+            g.drawString(msg, x, y);
+        }
     }
 }
-
